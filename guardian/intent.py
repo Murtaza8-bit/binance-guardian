@@ -19,11 +19,17 @@ def parse_trade_intent(message: str) -> TradeIntent:
     else:
         raise ValueError("Could not determine whether this is a BUY or SELL request.")
 
-    # Find USDT amount
-    amount_match = re.search(
-        r"(?:\$|usd|usdt)?\s*(\d+(?:\.\d+)?)\s*(?:usdt|usd)?",
-        text
+    # Find an explicitly monetary trade amount, not numbers from leverage text.
+    amount_patterns = (
+        r"\$\s*(\d+(?:\.\d+)?)",
+        r"\b(?:usd|usdt)\s*(\d+(?:\.\d+)?)\b",
+        r"\b(\d+(?:\.\d+)?)\s*(?:usd|usdt)\b",
     )
+    amount_match = None
+    for pattern in amount_patterns:
+        amount_match = re.search(pattern, text)
+        if amount_match:
+            break
 
     if not amount_match:
         raise ValueError("Could not determine the trade amount.")

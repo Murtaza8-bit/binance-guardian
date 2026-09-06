@@ -120,6 +120,36 @@ def run_guardian_review(request_text: str, mode: str, scenario_name: str = "ALLO
         market_prices=market_prices,
     )
 
+    if result.get("decision") == "ERROR":
+        error_message = result.get("error", {}).get(
+            "message",
+            "Guardian could not complete the review.",
+        )
+        result["trade"] = {
+            "symbol": "UNPARSED",
+            "side": "UNKNOWN",
+            "requested_amount_usdt": 0.0,
+            "approved_amount_usdt": 0.0,
+            "leverage": 1,
+        }
+        result["reasons"] = [error_message]
+        result["risk_checks"] = []
+        result["confirmation_required"] = bool(
+            policy.get("require_confirmation", False)
+        )
+        result["audit_record"] = {
+            "timestamp": "N/A",
+            "request": {
+                "text": request_text,
+                "symbol": "UNPARSED",
+                "requested_amount_usdt": 0.0,
+            },
+            "decision": {
+                "status": "ERROR",
+                "approved_amount_usdt": 0.0,
+            },
+        }
+
     result["source_label"] = snapshot["mode_label"]
     result["data_source"] = snapshot["source"]
     result["portfolio_snapshot"] = snapshot["portfolio"]

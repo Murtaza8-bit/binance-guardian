@@ -1,6 +1,6 @@
 # 🛡️ Binance Guardian – AI Trading Safety Agent
 
-An AI-powered trading safety agent built with **Binance Agent OS** that interprets trading intent, evaluates it against Binance portfolio data and user-defined risk policies, and returns an explainable **ALLOW, RESIZE, or BLOCK** decision before execution.
+An AI-agent safety workflow built with **Binance Agent OS**: the AI orchestration layer interprets trading intent, while Guardian's deterministic policy engine evaluates Binance portfolio data and user-defined risk policies and returns an explainable **ALLOW, RESIZE, or BLOCK** decision before execution.
 
 Guardian determines whether a trade should be:
 
@@ -32,7 +32,7 @@ Without a safety layer, the requested trade could exceed the user's intended ris
 
 ## 💡 Solution
 
-Binance Guardian acts as a policy-driven safety layer for AI-powered trading.
+Binance Guardian acts as a deterministic, policy-driven safety layer for AI-assisted trading.
 
 It combines:
 
@@ -60,13 +60,13 @@ Instead of blindly following an AI-generated trading instruction, Guardian evalu
 
 ## 🚀 Features
 
-* 🛡️ **AI Trading Safety Layer** — Evaluates trading requests before execution.
+* 🛡️ **Deterministic Trading Safety Layer** — Enforces configured policies before execution.
 * 🟢 **ALLOW** — Approves trades that satisfy all configured safety policies.
 * 🟡 **RESIZE** — Reduces trades that exceed permitted risk limits.
 * 🔴 **BLOCK** — Rejects trades that violate critical safety rules.
 * 🧠 **Natural-Language Policies** — Converts user risk instructions into structured policies.
 * 📊 **Portfolio-Aware** — Considers portfolio value, asset exposure, USDT balance, and market data.
-* ⚡ **Binance Agent OS Integration** — Uses Binance Agent OS MCP for account and market data.
+* ⚡ **Binance Agent OS Integration** — Supports an authenticated Agent OS → Guardian MCP orchestration path for account and market data.
 * 🔍 **Explainable Decisions** — Shows which risk checks passed or failed and why.
 * 📝 **Audit Trail** — Records requests, portfolio data, policies, decisions, and execution status.
 * 🔒 **Read-Only Safety** — Guardian currently does not place, modify, or cancel orders.
@@ -453,9 +453,11 @@ binance-guardian/
 │   └── index.html
 │
 ├── tests/
+│   ├── test_intent.py
+│   ├── test_policy.py
+│   ├── test_policy_compiler.py
 │   ├── test_account.py
-│   ├── test_guardian_dashboard.py
-│   └── test_intent.py
+│   └── test_guardian_dashboard.py
 │
 └── .vscode/
     └── mcp.json

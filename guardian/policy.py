@@ -283,6 +283,8 @@ def evaluate_trade(intent, portfolio, policy):
     # Final decision
     # ---------------------------------------------------------
 
+    approved_amount = round(approved_amount, 2)
+
     if approved_amount <= 0:
 
         status = "BLOCK"
@@ -302,7 +304,7 @@ def evaluate_trade(intent, portfolio, policy):
     return PolicyDecision(
         status=status,
         requested_amount=intent.amount_usdt,
-        approved_amount=round(approved_amount, 2),
+        approved_amount=approved_amount,
         reasons=reasons,
         risk_checks=risk_checks
     )

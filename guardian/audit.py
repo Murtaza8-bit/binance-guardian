@@ -35,6 +35,10 @@ def create_audit_record(
                 "current_asset_value_usdt"
             ],
             "daily_pnl_pct": portfolio["daily_pnl_pct"],
+            "asset_values": portfolio.get("asset_values", {}),
+            "available_asset_values": portfolio.get("available_asset_values", {}),
+            "valuation_complete": portfolio.get("valuation_complete", True),
+            "missing_market_prices": portfolio.get("missing_market_prices", []),
         },
 
         "policy": policy,
@@ -42,6 +46,10 @@ def create_audit_record(
         "decision": {
             "status": result["status"],
             "approved_amount_usdt": result["approved_amount"],
+            "confirmation_required": result.get(
+                "confirmation_required",
+                bool(policy.get("require_confirmation", False)),
+            ),
             "reasons": result["reasons"],
             "risk_checks": result.get("risk_checks", []),
         },

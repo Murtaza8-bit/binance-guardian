@@ -1,6 +1,42 @@
 import re
 
 
+class PolicyCompilationError(ValueError):
+    """Raised when a recognizable safety policy cannot be compiled safely."""
+
+
+def _unsupported_policy_categories(text: str, policy: dict) -> list[str]:
+    categories = []
+
+    if re.search(r"\b(?:trade|order)\b", text) and re.search(
+        r"\b(?:maximum|max|limit|cap|at most|no more)\b", text
+    ) and "max_trade_usdt" not in policy:
+        categories.append("maximum trade size")
+
+    if re.search(r"\b(?:asset|exposure|risk)\b", text) and re.search(
+        r"\b(?:\d+(?:\.\d+)?)\s*(?:%|percent)\b", text
+    ) and "max_asset_exposure_pct" not in policy:
+        categories.append("single-asset exposure")
+
+    if re.search(r"\busdt\b", text) and re.search(
+        r"\b(?:keep|maintain|reserve|minimum|at least|hold)\b", text
+    ) and "minimum_usdt_reserve_pct" not in policy:
+        categories.append("minimum USDT reserve")
+
+    if re.search(r"\bleverage\b|\b\d+(?:\.\d+)?\s*x\b", text) and "max_leverage" not in policy:
+        categories.append("maximum leverage")
+
+    if re.search(r"\b(?:daily|per day|in a day)\b", text) and re.search(
+        r"\b(?:loss|lose|drawdown)\b", text
+    ) and "max_daily_loss_pct" not in policy:
+        categories.append("daily loss limit")
+
+    if re.search(r"\bconfirm(?:ation|ed)?\b", text):
+        categories.append("confirmation requirement")
+
+    return categories
+
+
 def compile_policy(text: str) -> dict:
     """
     Convert a natural-language risk policy into Guardian's
@@ -98,5 +134,12 @@ def compile_policy(text: str) -> dict:
 
     if match:
         policy["max_daily_loss_pct"] = float(match.group(1))
+
+    unsupported_categories = _unsupported_policy_categories(text, policy)
+    if unsupported_categories:
+        categories = ", ".join(unsupported_categories)
+        raise PolicyCompilationError(
+            f"Could not compile safety policy requirement: {categories}."
+        )
 
     return policy

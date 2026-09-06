@@ -1,7 +1,7 @@
 import unittest
-import unittest
 
 from app import app, run_guardian_review
+from guardian.mcp_server import guardian_review_trade
 
 
 class GuardianDashboardTests(unittest.TestCase):
@@ -52,6 +52,26 @@ class GuardianDashboardTests(unittest.TestCase):
         self.assertIn("BLOCK", html)
         self.assertIn("$0.00", html)
         self.assertIn("BINANCE AGENT OS", html)
+        self.assertIn("Confirmation required: YES", html)
+        self.assertIn("before any future execution. No order was placed.", html)
+
+    def test_invalid_request_renders_error_without_server_failure(self):
+        client = app.test_client()
+        response = client.post(
+            "/",
+            data={"scenario": "AGENT_OS_DEMO", "request": "Buy BTC"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Could not determine the trade amount", response.get_data(as_text=True))
+
+    def test_mcp_error_does_not_disclose_traceback_or_path(self):
+        result = guardian_review_trade("Buy BTC", daily_pnl_pct=0.0)
+        serialized = str(result).lower()
+
+        self.assertEqual(result["decision"], "ERROR")
+        self.assertNotIn("traceback", serialized)
+        self.assertNotIn("c:\\users", serialized)
 
     def test_scenario_selector_contains_all_options(self):
         client = app.test_client()
