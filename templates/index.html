@@ -1,920 +1,488 @@
-        <!doctype html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>BINANCE GUARDIAN</title>
-            <style>
-              :root {
-                --bg: #09111d;
-                --bg-alt: #0f1d2f;
-                --panel: rgba(11, 19, 31, 0.9);
-                --panel-alt: rgba(18, 27, 40, 0.9);
-                --panel-soft: rgba(14, 23, 34, 0.75);
-                --line: rgba(148, 163, 184, 0.18);
-                --text: #edf4ff;
-                --muted: #92a5c3;
-                --green: #34d399;
-                --green-soft: rgba(52, 211, 153, 0.12);
-                --amber: #fbbf24;
-                --amber-soft: rgba(251, 191, 36, 0.12);
-                --red: #f87171;
-                --red-soft: rgba(248, 113, 113, 0.12);
-                --blue: #60a5fa;
-                --blue-soft: rgba(96, 165, 250, 0.12);
-                --purple: #a78bfa;
-                --shadow: 0 24px 60px rgba(2, 6, 23, 0.42);
-              }
-
-              * { box-sizing: border-box; }
-
-              html { scroll-behavior: smooth; }
-
-              body {
-                margin: 0;
-                min-height: 100vh;
-                background:
-                  radial-gradient(circle at top, rgba(96, 165, 250, 0.18), transparent 28%),
-                  radial-gradient(circle at left, rgba(167, 139, 250, 0.12), transparent 24%),
-                  linear-gradient(180deg, #0a1220 0%, var(--bg) 100%);
-                color: var(--text);
-                font-family: "Segoe UI", Inter, Arial, sans-serif;
-              }
-
-              .shell {
-                max-width: 1280px;
-                margin: 0 auto;
-                padding: 28px 18px 54px;
-              }
-
-              .header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 20px;
-                padding: 22px 26px;
-                border: 1px solid var(--line);
-                background: rgba(10, 17, 29, 0.82);
-                border-radius: 20px;
-                box-shadow: var(--shadow);
-                backdrop-filter: blur(8px);
-              }
-
-              .brand {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-              }
-
-              .brand-title {
-                font-size: clamp(2.1rem, 3vw, 3rem);
-                font-weight: 800;
-                letter-spacing: -0.04em;
-                line-height: 1.05;
-              }
-
-              .brand-subtitle {
-                font-size: 1.05rem;
-                color: var(--muted);
-                letter-spacing: 0.02em;
-              }
-
-              .status-badge {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                padding: 12px 16px;
-                border-radius: 999px;
-                border: 1px solid rgba(96, 165, 250, 0.4);
-                background: rgba(96, 165, 250, 0.08);
-                color: #dfeeff;
-                font-size: 0.7rem;
-                font-weight: 700;
-                letter-spacing: 0.14em;
-                text-transform: uppercase;
-                white-space: nowrap;
-              }
-
-              .status-badge.demo {
-                border-color: rgba(251, 191, 36, 0.45);
-                background: rgba(251, 191, 36, 0.08);
-                color: #fef3c7;
-              }
-
-              .dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: currentColor;
-                box-shadow: 0 0 10px currentColor;
-              }
-
-              .hero {
-                margin-top: 24px;
-                padding: 28px 22px 20px;
-                border: 1px solid var(--line);
-                border-radius: 22px;
-                background: rgba(11, 19, 31, 0.82);
-                box-shadow: var(--shadow);
-              }
-
-              .hero-title {
-                margin: 0;
-                font-size: clamp(2.2rem, 4vw, 3.5rem);
-                line-height: 1.06;
-                letter-spacing: -0.05em;
-              }
-
-              .hero-subtitle {
-                margin-top: 12px;
-                max-width: 760px;
-                color: var(--muted);
-                font-size: 1.05rem;
-                line-height: 1.6;
-              }
-
-              .request-form {
-                margin-top: 24px;
-              }
-
-              .input-shell {
-                display: grid;
-                grid-template-columns: 1fr auto;
-                gap: 14px;
-                align-items: end;
-              }
-
-              textarea {
-                width: 100%;
-                min-height: 86px;
-                padding: 18px 18px;
-                border-radius: 16px;
-                border: 1px solid var(--line);
-                background: rgba(15, 23, 34, 0.85);
-                color: var(--text);
-                font-size: 1.08rem;
-                resize: vertical;
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-              }
-
-              textarea:focus {
-                outline: 2px solid rgba(96, 165, 250, 0.4);
-                border-color: rgba(96, 165, 250, 0.45);
-              }
-
-              .review-button {
-                border: 0;
-                border-radius: 16px;
-                padding: 18px 28px;
-                font-size: 0.96rem;
-                font-weight: 800;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                cursor: pointer;
-                color: #edf6ff;
-                background: linear-gradient(135deg, var(--blue), var(--purple));
-                box-shadow: 0 16px 28px rgba(96,165,250,0.28);
-              }
-
-              .request-meta {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-                flex-wrap: wrap;
-                margin-top: 18px;
-                color: var(--muted);
-                font-size: 0.92rem;
-              }
-
-              .meta-inline {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                color: var(--text);
-                font-weight: 600;
-              }
-
-              .meta-inline .label {
-                color: var(--muted);
-              }
-
-              .scenario-row {
-                display: flex;
-                gap: 12px;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: wrap;
-                margin-top: 20px;
-              }
-
-              .scenario-button {
-                border: 1px solid var(--line);
-                border-radius: 999px;
-                background: rgba(15, 23, 34, 0.82);
-                color: var(--text);
-                font-weight: 700;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                padding: 10px 16px;
-                cursor: pointer;
-                transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-              }
-
-              .scenario-button:hover {
-                transform: translateY(-1px);
-              }
-
-              .scenario-button.active {
-                border-color: rgba(96, 165, 250, 0.5);
-                background: rgba(96, 165, 250, 0.1);
-              }
-
-              .scenario-button.live.active {
-                border-color: rgba(96, 165, 250, 0.5);
-                background: rgba(96, 165, 250, 0.1);
-              }
-
-              .scenario-button.allow.active {
-                border-color: rgba(52, 211, 153, 0.45);
-                background: rgba(52, 211, 153, 0.1);
-              }
-
-              .scenario-button.resize.active {
-                border-color: rgba(251, 191, 36, 0.45);
-                background: rgba(251, 191, 36, 0.1);
-              }
-
-              .scenario-button.block.active {
-                border-color: rgba(248, 113, 113, 0.45);
-                background: rgba(248, 113, 113, 0.1);
-              }
-
-              .dashboard-grid {
-                display: grid;
-                grid-template-columns: minmax(0, 1.08fr) minmax(0, 1.18fr);
-                gap: 22px;
-                margin-top: 24px;
-              }
-
-              .stack {
-                display: grid;
-                gap: 22px;
-              }
-
-              .panel {
-                background: rgba(11, 19, 31, 0.82);
-                border: 1px solid var(--line);
-                border-radius: 22px;
-                padding: 22px 20px;
-                box-shadow: var(--shadow);
-              }
-
-              .panel-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 18px;
-              }
-
-              .section-title {
-                margin: 0;
-                color: var(--muted);
-                font-size: 0.78rem;
-                letter-spacing: 0.16em;
-                text-transform: uppercase;
-                font-weight: 800;
-              }
-
-              .portfolio-pill {
-                display: inline-flex;
-                align-items: center;
-                padding: 7px 10px;
-                border-radius: 999px;
-                border: 1px solid var(--line);
-                background: rgba(148, 163, 184, 0.08);
-                color: var(--text);
-                font-size: 0.7rem;
-                font-weight: 700;
-                letter-spacing: 0.1em;
-                text-transform: uppercase;
-              }
-
-              .kpis {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
-              }
-
-              .kpi {
-                background: var(--panel-soft);
-                border: 1px solid var(--line);
-                border-radius: 16px;
-                padding: 16px 14px;
-              }
-
-              .kpi-label {
-                color: var(--muted);
-                font-size: 0.74rem;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-              }
-
-              .kpi-value {
-                margin-top: 8px;
-                font-size: clamp(1.5rem, 2vw, 2rem);
-                font-weight: 800;
-                letter-spacing: -0.04em;
-              }
-
-              .source-tag {
-                margin-top: 16px;
-                color: var(--muted);
-                font-size: 0.88rem;
-              }
-
-              .decision-box {
-                border-radius: 20px;
-                border: 1px solid var(--line);
-                padding: 20px 18px;
-                gap: 12px;
-                grid-template-columns: 1fr;
-                align-items: center;
-                text-align: center;
-                min-height: 270px;
-                justify-content: center;
-              }
-
-              /* Above-the-fold hero grid */
-              .hero-grid {
-                display: grid;
-                grid-template-columns: 1fr 420px;
-                gap: 20px;
-                align-items: start;
-              }
-
-              .policy-card {
-                border-radius: 12px;
-                padding: 14px;
-                background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-                border: 1px solid var(--line);
-              }
-
-              .decision-box .primary-reason {
-                color: var(--muted);
-                margin-top: 6px;
-                font-size: 0.98rem;
-              }
-
-              .flow {
-                margin-top: 14px;
-                font-size: 0.92rem;
-                color: var(--muted);
-                display: flex;
-                gap: 8px;
-                align-items: center;
-              }
-
-              .flow .step { display:block; text-align:center; min-width: 80px; }
-
-              .audit-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-              details[open] > summary::after { content: "\25BC"; float: right; }
-              details > summary::after { content: "\25BA"; float: right; }
-
-              .decision-box.allow {
-                background: linear-gradient(180deg, rgba(52, 211, 153, 0.08), rgba(9, 17, 29, 0.2));
-                border-color: rgba(52, 211, 153, 0.32);
-              }
-
-              .decision-box.resize {
-                background: linear-gradient(180deg, rgba(251, 191, 36, 0.08), rgba(9, 17, 29, 0.2));
-                border-color: rgba(251, 191, 36, 0.32);
-              }
-
-              .decision-box.block {
-                background: linear-gradient(180deg, rgba(248, 113, 113, 0.08), rgba(9, 17, 29, 0.2));
-                border-color: rgba(248, 113, 113, 0.32);
-              }
-
-              .decision-badge {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 6px 10px;
-                border-radius: 999px;
-                background: rgba(255,255,255,0.02);
-                border: 1px solid var(--line);
-                color: var(--muted);
-                font-size: 0.7rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                font-weight: 800;
-              }
-
-              .decision-status {
-                margin-top: 16px;
-                font-size: clamp(2.7rem, 4vw, 4.2rem);
-                font-weight: 900;
-                letter-spacing: -0.06em;
-                line-height: 1;
-              }
-
-              .decision-box.allow .decision-status { color: var(--green); }
-              .decision-box.resize .decision-status { color: var(--amber); }
-              .decision-box.block .decision-status { color: var(--red); }
-
-              .decision-summary {
-                margin-top: 12px;
-                color: var(--muted);
-                font-size: 0.96rem;
-                line-height: 1.6;
-                max-width: 36ch;
-              }
-
-              .decision-meta {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
-                width: 100%;
-                margin-top: 20px;
-              }
-
-              .meta-card {
-                background: rgba(15, 23, 34, 0.9);
-                border: 1px solid var(--line);
-                border-radius: 14px;
-                padding: 12px 14px;
-              }
-
-              .meta-label {
-                display: block;
-                color: var(--muted);
-                font-size: 0.7rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-              }
-
-              .meta-value {
-                display: block;
-                margin-top: 8px;
-                font-size: 1.15rem;
-                font-weight: 800;
-              }
-
-              .risk-list {
-                display: grid;
-                gap: 12px;
-              }
-
-              .risk-item {
-                display: grid;
-                grid-template-columns: minmax(0,1fr) auto;
-                gap: 14px;
-                background: rgba(15, 23, 34, 0.9);
-                border: 1px solid var(--line);
-                border-radius: 14px;
-                padding: 14px 16px;
-              }
-
-              .risk-name {
-                font-weight: 800;
-              }
-
-              .risk-detail {
-                margin-top: 6px;
-                color: var(--muted);
-                font-size: 0.87rem;
-                line-height: 1.6;
-              }
-
-              .risk-status {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 999px;
-                padding: 8px 10px;
-                font-size: 0.66rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                font-weight: 800;
-              }
-
-              .risk-status.pass {
-                background: var(--green-soft);
-                color: #bbf7d0;
-              }
-
-              .risk-status.fail {
-                background: var(--red-soft);
-                color: #fecaca;
-              }
-
-              .risk-note {
-                margin-top: 8px;
-                font-size: 0.82rem;
-                color: var(--muted);
-              }
-
-              .reason-list {
-                margin: 0;
-                padding-left: 18px;
-                color: var(--text);
-                line-height: 1.7;
-              }
-
-              .status-grid {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0,1fr));
-                gap: 14px;
-              }
-
-              .status-card {
-                background: var(--panel-soft);
-                border: 1px solid var(--line);
-                border-radius: 14px;
-                padding: 14px 16px;
-              }
-
-              .status-label {
-                color: var(--muted);
-                font-size: 0.74rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-              }
-
-              .status-value {
-                margin-top: 8px;
-                font-size: 1.35rem;
-                font-weight: 900;
-              }
-
-              .policy-list {
-                display: grid;
-                gap: 10px;
-              }
-
-              .policy-row {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-                padding: 11px 12px;
-                background: rgba(15, 23, 34, 0.78);
-                border-radius: 12px;
-                border: 1px solid var(--line);
-              }
-
-              .policy-row span:first-child {
-                color: var(--muted);
-              }
-
-              .policy-row strong {
-                font-weight: 800;
-              }
-
-              .audit-box {
-                background: rgba(15, 23, 34, 0.78);
-                border: 1px solid var(--line);
-                border-radius: 14px;
-                padding: 16px;
-                overflow-x: auto;
-              }
-
-              .audit-grid {
-                display: grid;
-                gap: 10px;
-                line-height: 1.6;
-              }
-
-              .audit-grid strong {
-                color: var(--text);
-              }
-
-              pre {
-                margin: 10px 0 0;
-                color: #dfeeff;
-                white-space: pre-wrap;
-                word-break: break-word;
-              }
-
-              details {
-                border: 1px solid var(--line);
-                border-radius: 14px;
-                overflow: hidden;
-                background: rgba(15, 23, 34, 0.78);
-              }
-
-              summary {
-                list-style: none;
-                cursor: pointer;
-                padding: 14px 16px;
-                font-weight: 800;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--text);
-              }
-
-              summary::-webkit-details-marker { display: none; }
-
-              .audit-content {
-                padding: 0 16px 16px;
-              }
-
-              @media (max-width: 980px) {
-                .dashboard-grid { grid-template-columns: 1fr; }
-                .input-shell { grid-template-columns: 1fr; }
-              }
-
-              @media (max-width: 640px) {
-                .shell { padding-left: 14px; padding-right: 14px; }
-                .header { flex-direction: column; align-items: flex-start; }
-                .kpis, .status-grid, .decision-meta { grid-template-columns: 1fr; }
-                .review-button { width: 100%; }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="shell">
-              <header class="header">
-                <div class="brand">
-                  <div class="brand-title">BINANCE GUARDIAN</div>
-                  <div class="brand-subtitle">AI Trading Safety Agent</div>
-                </div>
-                <div class="status-badge {% if mode == 'demo' %}demo{% endif %}">
-                  <span class="dot"></span>
-                  {{ mode_label }}
-                  · READ-ONLY
-                </div>
-              </header>
-
-              <section class="hero">
-                <h1 class="hero-title">Should this trade be allowed?</h1>
-                <div class="hero-subtitle">
-                  Guardian evaluates trading intent against portfolio data and user-defined risk policies.
-                </div>
-
-                <div class="hero-grid">
-                  <div>
-                    <form method="post" class="request-form">
-                                          <div class="toolbar">
-                                            <select name="scenario">
-                                              <option value="AGENT_OS_DEMO" {% if scenario_name == 'AGENT_OS_DEMO' %}selected{% endif %}>🔵 AGENT OS ORCHESTRATION — NO LIVE DATA</option>
-                                              <option value="ALLOW" {% if scenario_name == 'ALLOW' %}selected{% endif %}>🟢 DEMO — ALLOW</option>
-                                              <option value="RESIZE" {% if scenario_name == 'RESIZE' %}selected{% endif %}>🟡 DEMO — RESIZE</option>
-                                              <option value="BLOCK" {% if scenario_name == 'BLOCK' %}selected{% endif %}>🔴 DEMO — BLOCK</option>
-                                            </select>
-                                            <button type="submit">Review Request</button>
-                                          </div>
-                      </div>
-
-                      <div class="input-shell" style="margin-top: 18px;">
-                        <textarea name="request" aria-label="Trade request">{{ request_text }}</textarea>
-                        <button type="submit" class="review-button">REVIEW TRADE</button>
-                      </div>
-                    </form>
-
-                    <div class="request-meta" style="margin-top:12px;">
-                      <div class="meta-inline">
-                        <span class="label">Data source:</span>
-                        <strong>{{ mode_label }}</strong>
-                      </div>
-                      <div class="meta-inline">
-                        <span class="label">Status:</span>
-                        <strong>READ-ONLY</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div class="panel policy-card">
-                      <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <div>
-                          <div class="section-title">YOUR SAFETY POLICY</div>
-                          <div style="color:var(--muted); font-size:0.95rem; margin-top:6px;">Every trade is evaluated against these rules before execution.</div>
-                        </div>
-                        <div style="text-align:right; font-weight:700; color:var(--muted); font-size:0.9rem;">Policy</div>
-                      </div>
-                      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:12px;">
-                        <div><small class="meta-label">MAX TRADE</small><div class="kpi-value">${{ "%.0f"|format(result['policy']['max_trade_usdt']) }}</div></div>
-                        <div><small class="meta-label">ASSET EXPOSURE</small><div class="kpi-value">{{ result['policy']['max_asset_exposure_pct'] }}%</div></div>
-                        <div><small class="meta-label">MAX LEVERAGE</small><div class="kpi-value">{{ result['policy']['max_leverage'] }}×</div></div>
-                        <div><small class="meta-label">DAILY LOSS</small><div class="kpi-value">{{ result['policy']['max_daily_loss_pct'] }}%</div></div>
-                        <div><small class="meta-label">USDT RESERVE</small><div class="kpi-value">{{ result['policy']['minimum_usdt_reserve_pct'] }}%</div></div>
-                        <div></div>
-                      </div>
-                    </div>
-
-                    <div class="panel" style="margin-top:14px;">
-                      <div class="decision-box {{ result['decision']|lower }}">
-                        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-                          <div>
-                            <div class="decision-badge">{{ result['decision'] }}</div>
-                            <div class="decision-status">{{ 'DEMO' if mode=='demo' else 'ORCHESTRATED' }}</div>
-                          </div>
-                          <div style="text-align:right;">
-                            <div style="color:var(--muted); font-size:0.9rem;">Requested</div>
-                            <div class="kpi-value">${{ "%.2f"|format(result['trade']['requested_amount_usdt']) }}</div>
-                            <div style="height:8px;"></div>
-                            <div style="color:var(--muted); font-size:0.9rem;">Approved</div>
-                            <div class="kpi-value">${{ "%.2f"|format(result['trade']['approved_amount_usdt']) }}</div>
-                          </div>
-                        </div>
-
-                        <div class="decision-summary" style="margin-top:8px; font-weight:600;">
-                          {% if result['decision'] == 'ALLOW' %}
-                            Trade satisfies your configured safety policy.
-                          {% elif result['decision'] == 'RESIZE' %}
-                            Trade exceeds your configured risk limits and was reduced.
-                          {% elif result['decision'] == 'BLOCK' %}
-                            Trade violates your configured safety policy and was rejected.
-                          {% else %}
-                            Guardian could not complete the review and requires manual inspection.
-                          {% endif %}
-                        </div>
-
-                        <div class="primary-reason">{{ result['reasons'][0] if result['reasons'] else '' }}</div>
-
-                        <div class="flow" aria-hidden="true">
-                          <div class="step">USER INTENT</div>
-                          <div class="step">BINANCE AGENT OS</div>
-                          <div class="step">GUARDIAN POLICY ENGINE</div>
-                          <div class="step">{{ result['decision'] }}</div>
-                          <div class="step">EXECUTION</div>
-                        </div>
-
-                        <div style="color:var(--muted); font-size:0.85rem; margin-top:8px;">Guardian is currently READ-ONLY — no orders are executed.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <div class="dashboard-grid">
-                <div class="stack">
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">{% if mode == 'demo' %}DEMO / TEST PORTFOLIO{% else %}AGENT OS ORCHESTRATION DATA{% endif %}</h2>
-                      <div class="portfolio-pill">{{ mode_label }}</div>
-                    </div>
-
-                    <div class="kpis">
-                      <div class="kpi">
-                        <div class="kpi-label">Total Portfolio</div>
-                        <div class="kpi-value">${{ "%.2f"|format(portfolio.total_value_usdt if portfolio else 0.0) }}</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="kpi-label">USDT Available</div>
-                        <div class="kpi-value">${{ "%.2f"|format(portfolio.usdt_balance if portfolio else 0.0) }}</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="kpi-label">{{ result['trade']['symbol'] }} Exposure</div>
-                        <div class="kpi-value">${{ "%.2f"|format(portfolio.current_asset_value_usdt if portfolio else 0.0) }}</div>
-                      </div>
-                      <div class="kpi">
-                        <div class="kpi-label">Market Price</div>
-                        <div class="kpi-value">${{ "%.2f"|format(current_price) }}</div>
-                      </div>
-                    </div>
-
-                    <div class="source-tag">
-                      Source: {{ data_source }}
-                    </div>
-                  </section>
-
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">Your Risk Policy</h2>
-                    </div>
-                    <div class="policy-list">
-                      <div class="policy-row"><span>Maximum trade</span><strong>${{ "%.2f"|format(result['policy']['max_trade_usdt']) }}</strong></div>
-                      <div class="policy-row"><span>Single-asset exposure</span><strong>{{ result['policy']['max_asset_exposure_pct'] }}%</strong></div>
-                      <div class="policy-row"><span>Maximum leverage</span><strong>{{ result['policy']['max_leverage'] }}×</strong></div>
-                      <div class="policy-row"><span>Daily loss limit</span><strong>{{ result['policy']['max_daily_loss_pct'] }}%</strong></div>
-                      <div class="policy-row"><span>Minimum USDT reserve</span><strong>{{ result['policy']['minimum_usdt_reserve_pct'] }}%</strong></div>
-                      <div class="policy-row"><span>Required confirmation</span><strong>{{ 'YES' if result['policy'].get('require_confirmation') else 'NO' }}</strong></div>
-                    </div>
-                    <div class="source-tag" style="margin-top: 14px;">Guardian evaluates every trade against these rules before execution.</div>
-                  </section>
-                </div>
-
-                <div class="stack">
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">Guardian Decision</h2>
-                    </div>
-                    <div class="decision-box {{ result['decision']|lower }}">
-                      <div class="decision-badge">{{ result['decision'] }}</div>
-                      <div class="decision-status">{{ result['decision'] }}</div>
-                      <div class="decision-summary">
-                        {% if result['decision'] == 'ALLOW' %}
-                          All configured checks passed and this request remains within the configured guardrails.
-                        {% elif result['decision'] == 'RESIZE' %}
-                          {{ result['reasons'][0] if result['reasons'] else 'Guardian reduced the request within policy limits.' }}
-                        {% elif result['decision'] == 'BLOCK' %}
-                          {{ result['reasons'][0] if result['reasons'] else 'Guardian blocked the request due to policy limits.' }}
-                        {% else %}
-                          Guardian could not complete the review and requires manual inspection.
-                        {% endif %}
-                      </div>
-
-                      <div class="decision-meta">
-                        <div class="meta-card">
-                          <span class="meta-label">Requested</span>
-                          <span class="meta-value">${{ "%.2f"|format(result['trade']['requested_amount_usdt']) }}</span>
-                        </div>
-                        <div class="meta-card">
-                          <span class="meta-label">Approved</span>
-                          <span class="meta-value">${{ "%.2f"|format(result['trade']['approved_amount_usdt']) }}</span>
-                        </div>
-                      </div>
-                      <div class="source-tag" style="margin-top:16px;">Confirmation required: {{ 'YES' if result.get('confirmation_required') else 'NO' }} before any future execution. No order was placed.</div>
-                    </div>
-                  </section>
-
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">Risk Checks</h2>
-                    </div>
-                    <div class="risk-list">
-                      {% for check in risk_checks %}
-                        <div class="risk-item">
-                          <div>
-                            <div class="risk-name">{{ check['check'] }}</div>
-                            <div class="risk-detail">Limit: {{ check.get('limit', 'N/A') }}</div>
-                            <div class="risk-detail">Actual: {{ check.get('actual', 'N/A') }}</div>
-                            {% if check.get('remaining_capacity') is not none %}
-                              <div class="risk-note">Remaining capacity: ${{ "%.2f"|format(check['remaining_capacity']) }}</div>
-                            {% endif %}
-                            {% if check.get('spendable') is not none %}
-                              <div class="risk-note">Spendable USDT: ${{ "%.2f"|format(check['spendable']) }}</div>
-                            {% endif %}
-                            <div class="risk-note">{{ check.get('message', '') }}</div>
-                          </div>
-                          <div class="risk-status {{ 'pass' if check['status'] == 'PASS' else 'fail' }}">{{ check['status'] }}</div>
-                        </div>
-                      {% endfor %}
-                    </div>
-                  </section>
-
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">Why This Decision?</h2>
-                    </div>
-                    <ul class="reason-list">
-                      {% for reason in result['reasons'] %}
-                        <li>{{ reason }}</li>
-                      {% endfor %}
-                    </ul>
-                  </section>
-
-                  <section class="panel">
-                    <div class="panel-header">
-                      <h2 class="section-title">Execution Status</h2>
-                    </div>
-                    <div class="status-grid">
-                      <div class="status-card">
-                        <div class="status-label">Order Placed</div>
-                        <div class="status-value" style="color: var(--green);">NO</div>
-                      </div>
-                      <div class="status-card">
-                        <div class="status-label">Execution Authorized</div>
-                        <div class="status-value" style="color: var(--green);">NO</div>
-                      </div>
-                    </div>
-                    <div class="source-tag" style="margin-top: 16px;">Guardian is currently operating in READ-ONLY mode.</div>
-                  </section>
-                </div>
-              </div>
-
-              <section class="panel" style="margin-top: 24px;">
-                <div class="panel-header">
-                  <h2 class="section-title">Audit Trail</h2>
-                </div>
-                <details open>
-                  <summary>View audit record summary</summary>
-                  <div class="audit-content">
-                    <div class="audit-summary">
-                      <div><strong>Timestamp</strong><div style="color:var(--muted);">{{ result['audit_record']['timestamp'] }}</div></div>
-                      <div><strong>Request</strong><div style="color:var(--muted);">{{ result['audit_record']['request']['text'] }}</div></div>
-                      <div><strong>Symbol</strong><div style="color:var(--muted);">{{ result['audit_record']['request']['symbol'] }}</div></div>
-                      <div><strong>Decision</strong><div style="color:var(--muted);">{{ result['audit_record']['decision']['status'] }}</div></div>
-                      <div><strong>Requested</strong><div style="color:var(--muted);">${{ "%.2f"|format(result['audit_record']['request']['requested_amount_usdt']) }}</div></div>
-                      <div><strong>Approved</strong><div style="color:var(--muted);">${{ "%.2f"|format(result['audit_record']['decision']['approved_amount_usdt']) }}</div></div>
-                      <div><strong>Portfolio Value</strong><div style="color:var(--muted);">${{ "%.2f"|format(portfolio.total_value_usdt if portfolio else 0.0) }}</div></div>
-                      <div><strong>Execution Status</strong><div style="color:var(--muted);">order_placed = false, execution_authorized = false</div></div>
-                    </div>
-
-                    <div style="margin-top:12px;">
-                      <details>
-                        <summary>View raw audit data</summary>
-                        <pre style="max-height:360px; overflow:auto; background:rgba(0,0,0,0.45); padding:12px; border-radius:8px;">{{ result['audit_record'] | tojson(indent=2) }}</pre>
-                      </details>
-                    </div>
-                  </div>
-                </details>
-              </section>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BINANCE GUARDIAN</title>
+  <style>
+    :root{
+      --bg:#07101d;
+      --bg-2:#0b1626;
+      --panel:rgba(11,20,34,.82);
+      --panel-2:rgba(16,27,44,.72);
+      --line:rgba(148,163,184,.16);
+      --line-strong:rgba(148,163,184,.26);
+      --text:#f3f7ff;
+      --muted:#8ea3c2;
+      --blue:#60a5fa;
+      --purple:#9b87f5;
+      --green:#34d399;
+      --amber:#fbbf24;
+      --red:#f87171;
+      --green-soft:rgba(52,211,153,.10);
+      --amber-soft:rgba(251,191,36,.10);
+      --red-soft:rgba(248,113,113,.10);
+      --shadow:0 22px 70px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:"Segoe UI",Inter,Arial,sans-serif;
+      background:
+        radial-gradient(900px 500px at 50% -10%,rgba(96,165,250,.16),transparent 65%),
+        radial-gradient(700px 500px at -10% 30%,rgba(155,135,245,.09),transparent 60%),
+        linear-gradient(180deg,#091322 0%,var(--bg) 55%,#060d17 100%);
+    }
+
+    button,select,textarea{font:inherit}
+    button,select{cursor:pointer}
+    .shell{max-width:1320px;margin:0 auto;padding:24px 20px 56px}
+
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:20px;
+      padding:20px 24px;border:1px solid var(--line);border-radius:20px;
+      background:rgba(7,15,27,.78);backdrop-filter:blur(14px);box-shadow:var(--shadow);
+    }
+    .brand-row{display:flex;align-items:center;gap:14px}
+    .brand-mark{
+      width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--purple));
+      box-shadow:0 10px 28px rgba(96,165,250,.20);
+      font-weight:900;color:white;
+    }
+    .brand-title{font-size:1.15rem;font-weight:900;letter-spacing:.08em}
+    .brand-subtitle{margin-top:3px;color:var(--muted);font-size:.82rem}
+    .status-badge{
+      display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(96,165,250,.34);background:rgba(96,165,250,.07);
+      color:#dcecff;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+      white-space:nowrap
+    }
+    .status-badge.demo{border-color:rgba(251,191,36,.34);background:rgba(251,191,36,.07);color:#fff1c2}
+    .dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+
+    .hero{
+      margin-top:20px;padding:34px;border:1px solid var(--line);border-radius:26px;
+      background:linear-gradient(145deg,rgba(12,22,37,.92),rgba(7,15,27,.82));
+      box-shadow:var(--shadow)
+    }
+    .eyebrow{color:var(--blue);font-size:.72rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .hero-title{margin:8px 0 0;font-size:clamp(2.25rem,5vw,4.4rem);line-height:.98;letter-spacing:-.055em}
+    .hero-subtitle{max-width:780px;margin-top:14px;color:var(--muted);font-size:1.02rem;line-height:1.65}
+
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:22px;margin-top:28px;align-items:start}
+
+    .request-card,.policy-card,.panel{
+      border:1px solid var(--line);border-radius:20px;background:var(--panel);
+      box-shadow:0 14px 45px rgba(0,0,0,.16)
+    }
+    .request-card{padding:20px}
+    .card-kicker{color:var(--muted);font-size:.68rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    .request-heading{margin:7px 0 0;font-size:1.08rem;font-weight:800}
+    .request-form{margin-top:18px}
+    .toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+    select{
+      width:100%;min-height:46px;padding:0 14px;border-radius:12px;
+      border:1px solid var(--line-strong);background:#0d1929;color:var(--text);
+      outline:none
+    }
+    select:focus{border-color:rgba(96,165,250,.55);box-shadow:0 0 0 3px rgba(96,165,250,.10)}
+    .toolbar button{
+      min-height:46px;padding:0 18px;border:1px solid rgba(96,165,250,.28);
+      border-radius:12px;background:rgba(96,165,250,.10);color:#dcecff;
+      font-weight:800
+    }
+    .toolbar button:hover{background:rgba(96,165,250,.16)}
+    .input-shell{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:12px}
+    textarea{
+      width:100%;min-height:92px;padding:16px;border-radius:14px;border:1px solid var(--line-strong);
+      background:#0a1524;color:var(--text);resize:vertical;outline:none;font-size:1rem;line-height:1.5
+    }
+    textarea::placeholder{color:#6f84a3}
+    textarea:focus{border-color:rgba(96,165,250,.58);box-shadow:0 0 0 3px rgba(96,165,250,.10)}
+    .review-button{
+      align-self:stretch;min-width:178px;border:0;border-radius:14px;padding:0 22px;
+      color:white;background:linear-gradient(135deg,#5ea7ff,#9a83f2);
+      font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+      box-shadow:0 16px 34px rgba(96,165,250,.22);transition:transform .15s ease,filter .15s ease
+    }
+    .review-button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+    .request-meta{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:.82rem}
+    .meta-inline{display:flex;gap:7px;align-items:center}
+    .meta-inline strong{color:var(--text)}
+    .meta-label{color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+
+    .policy-card{padding:20px}
+    .policy-head{display:flex;justify-content:space-between;gap:15px;align-items:start}
+    .policy-title{font-size:1.02rem;font-weight:900}
+    .policy-note{margin-top:5px;color:var(--muted);font-size:.82rem;line-height:1.5}
+    .policy-badge{padding:7px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:.65rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .policy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+    .policy-stat{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(15,27,44,.65)}
+    .policy-stat .value{margin-top:6px;font-size:1.55rem;font-weight:900;letter-spacing:-.04em}
+    .policy-stat .value small{font-size:.85rem;color:var(--muted);font-weight:700}
+    .policy-foot{margin-top:13px;color:var(--muted);font-size:.76rem;line-height:1.5}
+
+    .flow{
+      display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+      align-items:center;gap:8px;margin-top:22px
+    }
+    .flow-step{
+      padding:12px 10px;border:1px solid var(--line);border-radius:12px;
+      background:rgba(15,27,44,.58);text-align:center;color:#dce8fa;
+      font-size:.65rem;font-weight:900;letter-spacing:.10em;text-transform:uppercase
+    }
+    .flow-arrow{color:#617793;text-align:center}
+
+    .dashboard-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:20px;margin-top:20px}
+    .stack{display:grid;gap:20px}
+    .panel{padding:20px}
+    .panel-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .section-title{margin:0;color:#a9bbd5;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    .portfolio-pill{padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(148,163,184,.06);color:#bdcce0;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+
+    .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .kpi{padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel-2)}
+    .kpi-label{color:var(--muted);font-size:.67rem;font-weight:800;letter-spacing:.10em;text-transform:uppercase}
+    .kpi-value{margin-top:7px;font-size:1.55rem;font-weight:900;letter-spacing:-.04em}
+    .source-tag{margin-top:13px;color:var(--muted);font-size:.77rem;line-height:1.5}
+
+    .decision-box{
+      min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:28px;border-radius:18px;border:1px solid var(--line);
+    }
+    .decision-box.allow{background:linear-gradient(180deg,var(--green-soft),rgba(7,15,27,.22));border-color:rgba(52,211,153,.30)}
+    .decision-box.resize{background:linear-gradient(180deg,var(--amber-soft),rgba(7,15,27,.22));border-color:rgba(251,191,36,.30)}
+    .decision-box.block{background:linear-gradient(180deg,var(--red-soft),rgba(7,15,27,.22));border-color:rgba(248,113,113,.30)}
+    .decision-badge{padding:7px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:.66rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+    .decision-status{margin-top:13px;font-size:clamp(3.4rem,6vw,5.5rem);line-height:.9;font-weight:950;letter-spacing:-.07em}
+    .decision-box.allow .decision-status{color:var(--green)}
+    .decision-box.resize .decision-status{color:var(--amber)}
+    .decision-box.block .decision-status{color:var(--red)}
+    .decision-summary{max-width:560px;margin-top:15px;color:#b7c7dd;font-size:.94rem;line-height:1.6}
+    .decision-meta{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:10px;width:min(520px,100%);margin-top:20px}
+    .meta-card{padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:rgba(8,17,29,.65)}
+    .meta-value{display:block;margin-top:5px;font-size:1.25rem;font-weight:900}
+    .primary-reason{margin-top:14px;color:#d7e2f1;font-size:.82rem;line-height:1.55;max-width:560px}
+    .execution-note{margin-top:14px;padding:9px 12px;border-radius:10px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.12);color:#9fb3ce;font-size:.73rem}
+
+    .policy-list{display:grid;gap:8px}
+    .policy-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:rgba(15,27,44,.58)}
+    .policy-row span{color:var(--muted);font-size:.82rem}
+    .policy-row strong{font-size:.88rem}
+
+    .risk-list{display:grid;gap:9px}
+    .risk-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:13px;border:1px solid var(--line);border-radius:13px;background:rgba(15,27,44,.58)}
+    .risk-name{font-weight:800;font-size:.87rem}
+    .risk-detail{margin-top:4px;color:var(--muted);font-size:.76rem}
+    .risk-note{margin-top:5px;color:#9fb1ca;font-size:.72rem;line-height:1.45}
+    .risk-status{align-self:start;padding:7px 9px;border-radius:999px;font-size:.62rem;font-weight:900;letter-spacing:.10em;text-transform:uppercase}
+    .risk-status.pass{background:var(--green-soft);color:#9cf0c9;border:1px solid rgba(52,211,153,.16)}
+    .risk-status.fail{background:var(--red-soft);color:#ffc1c1;border:1px solid rgba(248,113,113,.16)}
+
+    .reason-list{margin:0;padding-left:20px;color:#dbe6f5;line-height:1.75;font-size:.86rem}
+    .status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .status-card{padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}
+    .status-label{color:var(--muted);font-size:.67rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+    .status-value{margin-top:6px;font-size:1.35rem;font-weight:950}
+
+    .audit{margin-top:20px}
+    details{border:1px solid var(--line);border-radius:14px;background:rgba(15,27,44,.55);overflow:hidden}
+    summary{list-style:none;cursor:pointer;padding:14px 15px;font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"＋";float:right;color:var(--muted)}
+    details[open]>summary::after{content:"−"}
+    .audit-content{padding:0 15px 15px}
+    .audit-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .audit-item{padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(8,17,29,.5);min-width:0}
+    .audit-item strong{font-size:.72rem}
+    .audit-item div{margin-top:5px;color:var(--muted);font-size:.74rem;line-height:1.5;overflow-wrap:anywhere}
+    pre{margin:10px 0 0;color:#dcecff;white-space:pre-wrap;word-break:break-word;font-size:.72rem;line-height:1.55}
+    .raw-audit{background:rgba(0,0,0,.34);padding:13px;border-radius:10px;max-height:360px;overflow:auto}
+
+    @media (max-width:1050px){
+      .hero-grid,.dashboard-grid{grid-template-columns:1fr}
+      .audit-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:720px){
+      .shell{padding:14px 12px 36px}
+      .topbar{align-items:flex-start;flex-direction:column;padding:17px}
+      .hero{padding:23px 17px}
+      .hero-title{font-size:2.45rem}
+      .toolbar,.input-shell{grid-template-columns:1fr}
+      .review-button{min-height:52px}
+      .flow{grid-template-columns:1fr}
+      .flow-arrow{display:none}
+      .kpis,.policy-grid,.decision-meta,.status-grid,.audit-summary{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="brand-row">
+        <div class="brand-mark">G</div>
+        <div>
+          <div class="brand-title">BINANCE GUARDIAN</div>
+          <div class="brand-subtitle">AI Trading Safety Agent</div>
+        </div>
+      </div>
+      <div class="status-badge {% if mode == 'demo' %}demo{% endif %}">
+        <span class="dot"></span>
+        {{ mode_label }} · READ-ONLY
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Policy enforcement layer</div>
+      <h1 class="hero-title">Should this trade<br>be allowed?</h1>
+      <div class="hero-subtitle">
+        Guardian evaluates trading intent against portfolio context and user-defined risk policies,
+        then produces a deterministic <strong>ALLOW · RESIZE · BLOCK</strong> decision.
+      </div>
+
+      <div class="hero-grid">
+        <div class="request-card">
+          <div class="card-kicker">Trading request</div>
+          <div class="request-heading">Tell Guardian what the agent wants to do.</div>
+
+          <form method="post" class="request-form">
+            <div class="toolbar">
+              <select name="scenario" aria-label="Demo scenario">
+                <option value="AGENT_OS_DEMO" {% if scenario_name == 'AGENT_OS_DEMO' %}selected{% endif %}>🔵 AGENT OS ORCHESTRATION — NO LIVE DATA</option>
+                <option value="ALLOW" {% if scenario_name == 'ALLOW' %}selected{% endif %}>🟢 DEMO — ALLOW</option>
+                <option value="RESIZE" {% if scenario_name == 'RESIZE' %}selected{% endif %}>🟡 DEMO — RESIZE</option>
+                <option value="BLOCK" {% if scenario_name == 'BLOCK' %}selected{% endif %}>🔴 DEMO — BLOCK</option>
+              </select>
+              <button type="submit">Review Request</button>
             </div>
-          </body>
-        </html>
+
+            <div class="input-shell">
+              <textarea name="request" aria-label="Trade request" placeholder="Example: Buy $300 of SOL using 10x leverage">{{ request_text }}</textarea>
+              <button type="submit" class="review-button">Review Trade</button>
+            </div>
+          </form>
+
+          <div class="request-meta">
+            <div class="meta-inline"><span class="meta-label">Data source</span><strong>{{ mode_label }}</strong></div>
+            <div class="meta-inline"><span class="meta-label">Mode</span><strong>READ-ONLY</strong></div>
+          </div>
+        </div>
+
+        <div class="policy-card">
+          <div class="policy-head">
+            <div>
+              <div class="policy-title">Your safety policy</div>
+              <div class="policy-note">Every trade is evaluated against these rules before any future execution.</div>
+            </div>
+            <div class="policy-badge">Guardian Policy</div>
+          </div>
+
+          <div class="policy-grid">
+            <div class="policy-stat">
+              <div class="meta-label">MAX TRADE</div>
+              <div class="value">${{ "%.0f"|format(result['policy']['max_trade_usdt']) }}</div>
+            </div>
+            <div class="policy-stat">
+              <div class="meta-label">ASSET EXPOSURE</div>
+              <div class="value">{{ result['policy']['max_asset_exposure_pct'] }}<small>%</small></div>
+            </div>
+            <div class="policy-stat">
+              <div class="meta-label">MAX LEVERAGE</div>
+              <div class="value">{{ result['policy']['max_leverage'] }}<small>×</small></div>
+            </div>
+            <div class="policy-stat">
+              <div class="meta-label">USDT RESERVE</div>
+              <div class="value">{{ result['policy']['minimum_usdt_reserve_pct'] }}<small>%</small></div>
+            </div>
+          </div>
+          <div class="policy-foot">
+            Daily loss limit: <strong>{{ result['policy']['max_daily_loss_pct'] }}%</strong>
+            · Confirmation required: <strong>{{ 'YES' if result['policy'].get('require_confirmation') else 'NO' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow" aria-label="Guardian decision flow">
+        <div class="flow-step">User Intent</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Binance Agent OS</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Guardian Policy Engine</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">{{ result['decision'] }}</div>
+      </div>
+    </section>
+
+    <div class="dashboard-grid">
+
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="section-title">{% if mode == 'demo' %}Demo / Test Portfolio{% else %}Agent OS Orchestration Data{% endif %}</h2>
+            <div class="portfolio-pill">{{ mode_label }}</div>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi">
+              <div class="kpi-label">Total Portfolio</div>
+              <div class="kpi-value">${{ "%.2f"|format(portfolio.total_value_usdt if portfolio else 0.0) }}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">USDT Available</div>
+              <div class="kpi-value">${{ "%.2f"|format(portfolio.usdt_balance if portfolio else 0.0) }}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">{{ result['trade']['symbol'] }} Exposure</div>
+              <div class="kpi-value">${{ "%.2f"|format(portfolio.current_asset_value_usdt if portfolio else 0.0) }}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Market Price</div>
+              <div class="kpi-value">${{ "%.2f"|format(current_price) }}</div>
+            </div>
+          </div>
+
+          <div class="source-tag">Source: {{ data_source }}</div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><h2 class="section-title">Your Risk Policy</h2></div>
+          <div class="policy-list">
+            <div class="policy-row"><span>Maximum trade</span><strong>${{ "%.2f"|format(result['policy']['max_trade_usdt']) }}</strong></div>
+            <div class="policy-row"><span>Single-asset exposure</span><strong>{{ result['policy']['max_asset_exposure_pct'] }}%</strong></div>
+            <div class="policy-row"><span>Maximum leverage</span><strong>{{ result['policy']['max_leverage'] }}×</strong></div>
+            <div class="policy-row"><span>Daily loss limit</span><strong>{{ result['policy']['max_daily_loss_pct'] }}%</strong></div>
+            <div class="policy-row"><span>Minimum USDT reserve</span><strong>{{ result['policy']['minimum_usdt_reserve_pct'] }}%</strong></div>
+            <div class="policy-row"><span>Required confirmation</span><strong>{{ 'YES' if result['policy'].get('require_confirmation') else 'NO' }}</strong></div>
+          </div>
+          <div class="source-tag">Guardian evaluates every trade against these rules before execution.</div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-header"><h2 class="section-title">Guardian Decision</h2></div>
+
+          <div class="decision-box {{ result['decision']|lower }}">
+            <div class="decision-badge">{{ result['decision'] }}</div>
+            <div class="decision-status">{{ result['decision'] }}</div>
+
+            <div class="decision-summary">
+              {% if result['decision'] == 'ALLOW' %}
+                All configured checks passed and this request remains within the configured guardrails.
+              {% elif result['decision'] == 'RESIZE' %}
+                {{ result['reasons'][0] if result['reasons'] else 'Guardian reduced the request within policy limits.' }}
+              {% elif result['decision'] == 'BLOCK' %}
+                {{ result['reasons'][0] if result['reasons'] else 'Guardian blocked the request due to policy limits.' }}
+              {% else %}
+                Guardian could not complete the review and requires manual inspection.
+              {% endif %}
+            </div>
+
+            <div class="decision-meta">
+              <div class="meta-card">
+                <span class="meta-label">Requested</span>
+                <span class="meta-value">${{ "%.2f"|format(result['trade']['requested_amount_usdt']) }}</span>
+              </div>
+              <div class="meta-card">
+                <span class="meta-label">Approved</span>
+                <span class="meta-value">${{ "%.2f"|format(result['trade']['approved_amount_usdt']) }}</span>
+              </div>
+            </div>
+
+            <div class="primary-reason">
+              {{ result['reasons'][0] if result['reasons'] else '' }}
+            </div>
+
+            <div class="execution-note">
+              Confirmation required: <strong>{{ 'YES' if result.get('confirmation_required') else 'NO' }}</strong>
+              before any future execution · <strong>No order was placed.</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><h2 class="section-title">Risk Checks</h2></div>
+          <div class="risk-list">
+            {% for check in risk_checks %}
+            <div class="risk-item">
+              <div>
+                <div class="risk-name">{{ check['check'] }}</div>
+                <div class="risk-detail">Limit: {{ check.get('limit', 'N/A') }}</div>
+                <div class="risk-detail">Actual: {{ check.get('actual', 'N/A') }}</div>
+                {% if check.get('remaining_capacity') is not none %}
+                  <div class="risk-note">Remaining capacity: ${{ "%.2f"|format(check['remaining_capacity']) }}</div>
+                {% endif %}
+                {% if check.get('spendable') is not none %}
+                  <div class="risk-note">Spendable USDT: ${{ "%.2f"|format(check['spendable']) }}</div>
+                {% endif %}
+                <div class="risk-note">{{ check.get('message', '') }}</div>
+              </div>
+              <div class="risk-status {{ 'pass' if check['status'] == 'PASS' else 'fail' }}">{{ check['status'] }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><h2 class="section-title">Why This Decision?</h2></div>
+          <ul class="reason-list">
+            {% for reason in result['reasons'] %}
+              <li>{{ reason }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header"><h2 class="section-title">Execution Status</h2></div>
+          <div class="status-grid">
+            <div class="status-card">
+              <div class="status-label">Order Placed</div>
+              <div class="status-value" style="color:var(--green)">NO</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">Execution Authorized</div>
+              <div class="status-value" style="color:var(--green)">NO</div>
+            </div>
+          </div>
+          <div class="source-tag">Guardian is currently operating in READ-ONLY mode.</div>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel audit">
+      <div class="panel-header"><h2 class="section-title">Audit Trail</h2></div>
+      <details open>
+        <summary>View audit record summary</summary>
+        <div class="audit-content">
+          <div class="audit-summary">
+            <div class="audit-item"><strong>Timestamp</strong><div>{{ result['audit_record']['timestamp'] }}</div></div>
+            <div class="audit-item"><strong>Request</strong><div>{{ result['audit_record']['request']['text'] }}</div></div>
+            <div class="audit-item"><strong>Symbol</strong><div>{{ result['audit_record']['request']['symbol'] }}</div></div>
+            <div class="audit-item"><strong>Decision</strong><div>{{ result['audit_record']['decision']['status'] }}</div></div>
+            <div class="audit-item"><strong>Requested</strong><div>${{ "%.2f"|format(result['audit_record']['request']['requested_amount_usdt']) }}</div></div>
+            <div class="audit-item"><strong>Approved</strong><div>${{ "%.2f"|format(result['audit_record']['decision']['approved_amount_usdt']) }}</div></div>
+            <div class="audit-item"><strong>Portfolio Value</strong><div>${{ "%.2f"|format(portfolio.total_value_usdt if portfolio else 0.0) }}</div></div>
+            <div class="audit-item"><strong>Execution Status</strong><div>order_placed = false · execution_authorized = false</div></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <details>
+              <summary>View raw audit data</summary>
+              <pre class="raw-audit">{{ result['audit_record'] | tojson(indent=2) }}</pre>
+            </details>
+          </div>
+        </div>
+      </details>
+    </section>
+
+  </div>
+</body>
+</html>
