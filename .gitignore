@@ -1,0 +1,41 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test / coverage
+.pytest_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Local page capture
+page.html
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+
+# VS Code settings: keep mcp.json tracked but ignore other IDE files
+.vscode/*
+!.vscode/mcp.json

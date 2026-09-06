@@ -1,0 +1,17 @@
+{
+  "servers": {
+    "Binance Agent OS": {
+      "url": "https://agent.binance.com/mcp/agentic",
+      "type": "http"
+    },
+    "Binance Guardian": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "guardian.mcp_server"
+      ]
+    }
+  },
+  "inputs": []
+}
