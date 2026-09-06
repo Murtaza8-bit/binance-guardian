@@ -1,6 +1,6 @@
 # 🛡️ Binance Guardian – AI Trading Safety Agent
 
-An AI-powered trading safety agent built with **Binance Agent OS** that evaluates trading intent against portfolio data and user-defined risk policies before execution.
+An AI-powered trading safety agent built with **Binance Agent OS** that interprets trading intent, evaluates it against live Binance portfolio data and user-defined risk policies, and returns an explainable ALLOW, RESIZE, or BLOCK decision before execution.
 
 Guardian determines whether a trade should be:
 
@@ -43,6 +43,8 @@ It combines:
 * A deterministic policy engine
 * Explainable risk checks
 * An audit trail
+
+AI interprets the user's trading intent and safety instructions, while Guardian's deterministic policy engine makes the final ALLOW, RESIZE, or BLOCK decision using Binance data and the user's configured risk policies.
 
 The result is a simple safety decision:
 
@@ -177,7 +179,7 @@ Requested: $300
 Approved:  $25
 ```
 
-Instead of allowing the full $300 request, Guardian reduces it to the maximum amount permitted by the user's asset-exposure policy.
+Instead of allowing the full $300 request, Guardian reduces it to the maximum amount that remains within the user's configured risk limits.
 
 ---
 
@@ -213,7 +215,7 @@ Binance Guardian integrates with **Binance Agent OS** through MCP.
 
 Binance Agent OS provides access to relevant Binance account and market information, which Guardian uses to build a portfolio snapshot for risk evaluation.
 
-The current implementation uses **read-only access**.
+The current implementation is intentionally read-only for safety.
 
 Guardian currently does not:
 
