@@ -58,8 +58,8 @@ class GuardianDashboardTests(unittest.TestCase):
         response = client.get('/')
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        # Ensure the UI shows explicit LIVE and DEMO options
-        self.assertIn('🔵 LIVE — Binance Agent OS', html)
+        # Ensure the UI separates Agent OS orchestration from dashboard demo data.
+        self.assertIn('🔵 AGENT OS ORCHESTRATION — NO LIVE DATA', html)
         self.assertIn('🟢 DEMO — ALLOW', html)
         self.assertIn('🟡 DEMO — RESIZE', html)
         self.assertIn('🔴 DEMO — BLOCK', html)

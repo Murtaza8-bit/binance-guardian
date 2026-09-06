@@ -62,25 +62,21 @@ DEMO_SCENARIOS = {
 }
 
 
-def get_live_snapshot():
-    """Return the verified read-only live account snapshot."""
+def get_agent_os_dashboard_snapshot():
+    """Return the non-live dashboard placeholder for Agent OS orchestration."""
     return {
-        "mode_label": "LIVE",
-        "source": "Binance Agent OS",
+        "mode_label": "AGENT OS ORCHESTRATION / NO LIVE DATA",
+        "source": "Dashboard demo path; Binance Agent OS MCP data is external",
         "portfolio": {
             "total_value_usdt": 0.0,
             "usdt_balance": 0.0,
             "current_asset_value_usdt": 0.0,
             "daily_pnl_pct": 0.0,
-            "asset_values": {"SOL": 0.0},
+            "asset_values": {},
         },
-        "market_prices": {"SOL": 106.30},
-        "portfolio_snapshot": {
-            "balances": [
-                {"asset": "USDT", "free": "0", "locked": "0"},
-            ]
-        },
-        "scenario": "LIVE",
+        "market_prices": {},
+        "portfolio_snapshot": None,
+        "scenario": "AGENT_OS_DEMO",
     }
 
 
@@ -92,9 +88,13 @@ def get_demo_snapshot(scenario_name: str = "ALLOW"):
 def run_guardian_review(request_text: str, mode: str, scenario_name: str = "ALLOW"):
     """Run Guardian via the existing safety layer without permitting execution."""
     policy = load_guardian_policy(DEFAULT_USER_POLICY)
-    snapshot = get_live_snapshot() if mode == "live" else get_demo_snapshot(scenario_name)
+    snapshot = (
+        get_agent_os_dashboard_snapshot()
+        if mode in {"live", "agent_os_demo"}
+        else get_demo_snapshot(scenario_name)
+    )
 
-    if mode == "live":
+    if mode in {"live", "agent_os_demo"}:
         total_value_usdt = snapshot["portfolio"]["total_value_usdt"]
         usdt_balance = snapshot["portfolio"]["usdt_balance"]
         current_asset_value_usdt = snapshot["portfolio"]["current_asset_value_usdt"]
@@ -133,12 +133,12 @@ def run_guardian_review(request_text: str, mode: str, scenario_name: str = "ALLO
 def dashboard():
     request_text = "Buy $300 of SOL"
     mode = "live"
-    scenario_name = "LIVE"
+    scenario_name = "AGENT_OS_DEMO"
 
     if request.method == "POST":
         request_text = request.form.get("request", request_text)
         scenario_name = request.form.get("scenario", scenario_name).upper()
-        mode = "live" if scenario_name == "LIVE" else "demo"
+        mode = "agent_os_demo" if scenario_name in {"LIVE", "AGENT_OS_DEMO"} else "demo"
 
     if mode == "demo":
         demo_snapshot = get_demo_snapshot(scenario_name)

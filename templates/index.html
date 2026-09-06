@@ -744,7 +744,7 @@
                 </div>
                 <div class="status-badge {% if mode == 'demo' %}demo{% endif %}">
                   <span class="dot"></span>
-                  {% if mode == 'demo' %}DEMO / TEST DATA{% else %}BINANCE AGENT OS{% endif %}
+                  {{ mode_label }}
                   · READ-ONLY
                 </div>
               </header>
@@ -760,7 +760,7 @@
                     <form method="post" class="request-form">
                                           <div class="toolbar">
                                             <select name="scenario">
-                                              <option value="LIVE" {% if scenario_name == 'LIVE' %}selected{% endif %}>🔵 LIVE — Binance Agent OS</option>
+                                              <option value="AGENT_OS_DEMO" {% if scenario_name == 'AGENT_OS_DEMO' %}selected{% endif %}>🔵 AGENT OS ORCHESTRATION — NO LIVE DATA</option>
                                               <option value="ALLOW" {% if scenario_name == 'ALLOW' %}selected{% endif %}>🟢 DEMO — ALLOW</option>
                                               <option value="RESIZE" {% if scenario_name == 'RESIZE' %}selected{% endif %}>🟡 DEMO — RESIZE</option>
                                               <option value="BLOCK" {% if scenario_name == 'BLOCK' %}selected{% endif %}>🔴 DEMO — BLOCK</option>
@@ -778,7 +778,7 @@
                     <div class="request-meta" style="margin-top:12px;">
                       <div class="meta-inline">
                         <span class="label">Data source:</span>
-                        <strong>{{ 'DEMO / TEST DATA' if mode == 'demo' else 'BINANCE AGENT OS' }}</strong>
+                        <strong>{{ mode_label }}</strong>
                       </div>
                       <div class="meta-inline">
                         <span class="label">Status:</span>
@@ -811,7 +811,7 @@
                         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
                           <div>
                             <div class="decision-badge">{{ result['decision'] }}</div>
-                            <div class="decision-status">{{ 'DEMO' if mode=='demo' else 'LIVE' }}</div>
+                            <div class="decision-status">{{ 'DEMO' if mode=='demo' else 'ORCHESTRATED' }}</div>
                           </div>
                           <div style="text-align:right;">
                             <div style="color:var(--muted); font-size:0.9rem;">Requested</div>
@@ -855,8 +855,8 @@
                 <div class="stack">
                   <section class="panel">
                     <div class="panel-header">
-                      <h2 class="section-title">{% if mode == 'demo' %}DEMO / TEST PORTFOLIO{% else %}LIVE PORTFOLIO{% endif %}</h2>
-                      <div class="portfolio-pill">{% if mode == 'demo' %}Guardian Demo Scenario{% else %}Binance Agent OS{% endif %}</div>
+                      <h2 class="section-title">{% if mode == 'demo' %}DEMO / TEST PORTFOLIO{% else %}AGENT OS ORCHESTRATION DATA{% endif %}</h2>
+                      <div class="portfolio-pill">{{ mode_label }}</div>
                     </div>
 
                     <div class="kpis">
@@ -879,7 +879,7 @@
                     </div>
 
                     <div class="source-tag">
-                      Source: {% if mode == 'demo' %}Guardian Demo Scenario{% else %}Binance Agent OS{% endif %}
+                      Source: {{ data_source }}
                     </div>
                   </section>
 
@@ -909,7 +909,7 @@
                       <div class="decision-status">{{ result['decision'] }}</div>
                       <div class="decision-summary">
                         {% if result['decision'] == 'ALLOW' %}
-                          All configured checks passed and this request remains within the live guardrails.
+                          All configured checks passed and this request remains within the configured guardrails.
                         {% elif result['decision'] == 'RESIZE' %}
                           {{ result['reasons'][0] if result['reasons'] else 'Guardian reduced the request within policy limits.' }}
                         {% elif result['decision'] == 'BLOCK' %}

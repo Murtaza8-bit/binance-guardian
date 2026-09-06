@@ -1,6 +1,6 @@
 # 🛡️ Binance Guardian – AI Trading Safety Agent
 
-An AI-powered trading safety agent built with **Binance Agent OS** that interprets trading intent, evaluates it against live Binance portfolio data and user-defined risk policies, and returns an explainable ALLOW, RESIZE, or BLOCK decision before execution.
+An AI-powered trading safety agent built with **Binance Agent OS** that interprets trading intent, evaluates it against Binance portfolio data and user-defined risk policies, and returns an explainable **ALLOW, RESIZE, or BLOCK** decision before execution.
 
 Guardian determines whether a trade should be:
 
@@ -44,7 +44,7 @@ It combines:
 * Explainable risk checks
 * An audit trail
 
-AI interprets the user's trading intent and safety instructions, while Guardian's deterministic policy engine makes the final ALLOW, RESIZE, or BLOCK decision using Binance data and the user's configured risk policies.
+AI interprets the user's trading intent and safety instructions, while Guardian's deterministic policy engine makes the final **ALLOW, RESIZE, or BLOCK** decision using Binance data and the user's configured risk policies.
 
 The result is a simple safety decision:
 
@@ -71,7 +71,7 @@ Instead of blindly following an AI-generated trading instruction, Guardian evalu
 * 📝 **Audit Trail** — Records requests, portfolio data, policies, decisions, and execution status.
 * 🔒 **Read-Only Safety** — Guardian currently does not place, modify, or cancel orders.
 * 🖥️ **Interactive Dashboard** — Provides a visual interface for reviewing trade decisions.
-* 🧪 **Automated Testing** — Includes tests for Guardian logic and dashboard functionality.
+* 🧪 **Automated Testing** — Includes tests for Guardian logic, portfolio valuation, and dashboard functionality.
 
 ---
 
@@ -88,7 +88,9 @@ Guardian evaluates trading requests against configurable safety rules:
 
 These rules can be configured in:
 
-`config/policy.json`
+```text
+config/policy.json
+```
 
 ### Example Natural-Language Policy
 
@@ -111,9 +113,9 @@ Maximum leverage:        2x
 ```text
 User Trading Intent
         ↓
-Guardian Intent Parser
+AI Agent / Intent Interpretation
         ↓
-Binance Agent OS
+Binance Agent OS MCP
 (Account & Market Data)
         ↓
 Portfolio Snapshot
@@ -128,6 +130,8 @@ Guardian Policy Engine
         ↓
      Audit Trail
 ```
+
+The AI layer interprets the user's request, Binance Agent OS provides relevant account and market information, and Guardian's deterministic policy engine makes the final safety decision.
 
 ---
 
@@ -213,9 +217,9 @@ The unsafe request is rejected before execution.
 
 Binance Guardian integrates with **Binance Agent OS** through MCP.
 
-Binance Agent OS provides access to relevant Binance account and market information, which Guardian uses to build a portfolio snapshot for risk evaluation.
+Binance Agent OS provides access to relevant Binance account and market information, which can be passed to Guardian for portfolio-aware risk evaluation.
 
-The current implementation is intentionally read-only for safety.
+The current implementation is intentionally **read-only for safety**.
 
 Guardian currently does not:
 
@@ -226,6 +230,24 @@ Guardian currently does not:
 * Withdraw funds
 
 This allows the safety system to evaluate portfolio information without executing real trades.
+
+### Agent OS → Guardian Flow
+
+The authenticated Binance Agent OS environment can act as the orchestrator:
+
+```text
+Binance Agent OS
+       ↓
+Read-only Binance account / market data
+       ↓
+Guardian MCP
+       ↓
+Deterministic risk evaluation
+       ↓
+ALLOW / RESIZE / BLOCK
+```
+
+The Flask dashboard is used as the visual interface for reviewing Guardian decisions and demonstrating the safety scenarios. It does not claim to independently hold or reuse the Binance Agent OS authentication session.
 
 ---
 
@@ -333,12 +355,12 @@ The dashboard provides:
 * Execution status
 * Audit information
 * Demo scenarios
-* Live Binance Agent OS mode
+* Agent OS orchestration information
 
 ### Dashboard Modes
 
 ```text
-🔵 LIVE — Binance Agent OS
+🔵 AGENT OS ORCHESTRATION — NO DIRECT LIVE DATA
 🟢 DEMO — ALLOW
 🟡 DEMO — RESIZE
 🔴 DEMO — BLOCK
@@ -346,55 +368,57 @@ The dashboard provides:
 
 The demo modes make it possible to demonstrate Guardian's safety decisions without placing real orders.
 
+The Agent OS orchestration path demonstrates how live Binance account information can be provided to Guardian through the MCP architecture, while the Flask dashboard remains a read-only visualization layer.
+
 ---
 
 ## 📊 Architecture
 
 ```text
-                    ┌──────────────────────┐
-                    │        USER          │
-                    │  Trading Intent      │
-                    └──────────┬───────────┘
-                               │
+                     ┌──────────────────────┐
+                     │        USER          │
+                     │  Trading Intent      │
+                     └──────────┬───────────┘
+                                │
+                                ↓
+                     ┌──────────────────────┐
+                     │      AI Agent        │
+                     │ Intent Interpretation │
+                     └──────────┬───────────┘
+                                │
+                    ┌───────────┴───────────┐
+                    │                       │
+                    ↓                       ↓
+         ┌───────────────────┐   ┌───────────────────┐
+         │ Binance Agent OS  │   │ Natural-Language  │
+         │ MCP               │   │ Policy Compiler   │
+         │                   │   │                   │
+         │ Account & Market  │   │ User Risk Rules   │
+         │ Data              │   │                   │
+         └─────────┬─────────┘   └─────────┬─────────┘
+                   │                       │
+                   └───────────┬───────────┘
                                ↓
-                    ┌──────────────────────┐
-                    │   Guardian AI Layer  │
-                    │  Intent Interpretation│
-                    └──────────┬───────────┘
-                               │
-                 ┌─────────────┴─────────────┐
-                 │                           │
-                 ↓                           ↓
-      ┌───────────────────┐       ┌───────────────────┐
-      │ Binance Agent OS  │       │ Natural-Language  │
-      │ MCP               │       │ Policy Compiler   │
-      │                   │       │                   │
-      │ Account & Market  │       │ User Risk Rules   │
-      │ Data              │       │                   │
-      └─────────┬─────────┘       └─────────┬─────────┘
-                │                           │
-                └─────────────┬─────────────┘
-                              ↓
-                    ┌──────────────────────┐
-                    │ Guardian Policy      │
-                    │ Engine               │
-                    │                      │
-                    │ Deterministic Rules  │
-                    └──────────┬───────────┘
-                               │
-                               ↓
-                  ┌─────────────────────────┐
-                  │     Safety Decision     │
-                  │                         │
-                  │  🟢 ALLOW               │
-                  │  🟡 RESIZE              │
-                  │  🔴 BLOCK               │
-                  └────────────┬────────────┘
-                               │
-                               ↓
-                    ┌──────────────────────┐
-                    │     Audit Trail      │
-                    └──────────────────────┘
+                     ┌──────────────────────┐
+                     │ Guardian Policy      │
+                     │ Engine               │
+                     │                      │
+                     │ Deterministic Rules │
+                     └──────────┬───────────┘
+                                │
+                                ↓
+                   ┌─────────────────────────┐
+                   │     Safety Decision     │
+                   │                         │
+                   │  🟢 ALLOW               │
+                   │  🟡 RESIZE              │
+                   │  🔴 BLOCK               │
+                   └────────────┬────────────┘
+                                │
+                                ↓
+                     ┌──────────────────────┐
+                     │     Audit Trail      │
+                     └──────────────────────┘
 ```
 
 ---
@@ -429,6 +453,7 @@ binance-guardian/
 │   └── index.html
 │
 ├── tests/
+│   ├── test_account.py
 │   ├── test_guardian_dashboard.py
 │   └── test_intent.py
 │
@@ -493,7 +518,11 @@ The test suite covers:
 
 * Intent parsing
 * Guardian policy decisions
+* Portfolio valuation
+* Asset exposure calculations
+* Free and locked balances
 * Dashboard functionality
+* Demo scenarios
 
 ---
 
@@ -517,7 +546,7 @@ ALLOW / RESIZE / BLOCK
 
 The execution layer is intentionally not enabled in the current hackathon prototype.
 
-**Never commit API keys, secret keys, passwords, or other credentials to this repository.**
+**Never commit API keys, secret keys, passwords, OAuth tokens, or other credentials to this repository.**
 
 ---
 

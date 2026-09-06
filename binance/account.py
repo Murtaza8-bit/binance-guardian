@@ -40,9 +40,9 @@ def build_portfolio_from_balances(balances: list[dict], prices: Optional[dict[st
             usdt_balance = total
             total_value_usdt += total
         else:
-            asset_values[asset] = total
             price = float(prices.get(asset, 0.0) or 0.0) if prices else 0.0
-            total_value_usdt += total * price
+            asset_values[asset] = total * price
+            total_value_usdt += asset_values[asset]
 
     if usdt_balance > 0:
         total_value_usdt += 0.0
